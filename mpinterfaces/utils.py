@@ -28,7 +28,7 @@ from custodian.custodian import Custodian
 
 from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter
 
-from ase.lattice.surface import surface
+from ase.lattice.surface import surface, add_vacuum
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -45,7 +45,8 @@ fh.setFormatter(formatter)
 wf_logger.addHandler(fh)
 
 
-def get_ase_slab(pmg_struct, hkl=(1,1,1), min_thick=10, min_vac=10):
+def get_ase_slab(pmg_struct, hkl=(1,1,1), min_thick=10, min_vac=10, 
+                 center_slab=True):
     """
     takes in the intial structure as pymatgen Structure object
     uses ase to generate the slab
@@ -62,7 +63,10 @@ def get_ase_slab(pmg_struct, hkl=(1,1,1), min_thick=10, min_vac=10):
     h = pmg_slab_gen._proj_height
     nlayers = int(math.ceil(pmg_slab_gen.min_slab_size / h))
     ase_slab = surface(ase_atoms, hkl, nlayers)
-    ase_slab.center(vacuum=min_vac/2, axis=2)
+    if center_slab:
+        ase_slab.center(vacuum=min_vac/2, axis=2)
+    else:
+        add_vacuum(ase_slab, min_vac)
     pmg_slab_structure = AseAtomsAdaptor().get_structure(ase_slab)
     return Slab(lattice=pmg_slab_structure.lattice,
                 species=pmg_slab_structure.species_and_occu,

@@ -77,13 +77,11 @@ class Interface(Slab):
                  supercell=[1,1,1], name=None, adsorb_on_species=None,
                  adatom_on_lig=None, ligand=None, displacement=1.0,
                  surface_coverage=None, scell_nmax=10,
-                 coverage_tol=0.25,
-                 solvent=None, start_from_slab=False,
-                 validate_proximity=False,
+                 coverage_tol=0.25, solvent=None, 
+                 start_from_slab=False, validate_proximity=False,
                  to_unit_cell=False, coords_are_cartesian=False,
-                 primitive = True,
-                 from_ase=False,
-                 x_shift= 0, y_shift= 0, rot=[0,0,0],
+                 primitive=True, from_ase=False,
+                 x_shift=0, y_shift=0, rot=[0,0,0],
                  center_slab=True):
         self.from_ase = from_ase
         vac_extension = 0
@@ -95,7 +93,8 @@ class Interface(Slab):
                 strt = get_ase_slab(strt,
                                     hkl=hkl,
                                     min_thick=min_thick,
-                                    min_vac=min_vac + vac_extension)
+                                    min_vac=min_vac + vac_extension, 
+                                    center_slab=center_slab)
             else:
                 strt = SlabGenerator(strt, hkl, min_thick,
                                      min_vac + vac_extension,
